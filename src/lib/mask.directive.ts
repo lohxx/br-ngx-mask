@@ -8,18 +8,22 @@ const IGNORE_EVENTS = ['deleteContentBackward'];
   selector: '[mask]'
 })
 export class MaskDirective implements OnInit {
+  elementRef: any;
   groups: RegexMap = {};
   matches: string[] = [];
-  regexBuilder: RegexBuilder | null = null;
+  regexBuilder: RegexBuilder | null;
 
   @Input() maskPattern: string = '';
 
   constructor(
-    private elementRef: ElementRef<HTMLInputElement>,
-  ) { }
+    private el: ElementRef<any>,
+  ) { 
+    this.elementRef = this.el.nativeElement;
+    this.regexBuilder = null;
+  }
 
   ngOnInit() {
-    this.elementRef.nativeElement.maxLength = this.maskPattern.length;
+    this.elementRef.maxLength = this.maskPattern.length;
     this.regexBuilder = new RegexBuilder(this.maskPattern);
     this.groups = this.regexBuilder.build();
   }
@@ -34,14 +38,20 @@ export class MaskDirective implements OnInit {
     if (IGNORE_EVENTS.indexOf(event.inputType) != -1) {
       return
     }
-
     this.checkForMatches();
   }
 
-  @HostListener('keydown.Backspace', ['$event']) onDelete() {
-    this.matches = Object.keys(this.groups).filter(
-      rex => new RegExp(rex).exec(this.elementRef.nativeElement.value));
-    this.matches.pop();
+  @HostListener('keyup.Backspace', ['$event'])
+  onDelete() {
+    let regexps = Object.keys(this.groups);
+    let inputValue = this.elementRef.value;
+    this.matches = inputValue ? [regexps[0]] : [];
+    for(let rex of regexps) {
+      let match: RegExpMatchArray | null = inputValue.match(new RegExp(rex));
+      if (match?.index && inputValue[match.index] == this.groups[rex]) {
+        this.matches.push(rex);
+      }
+    }
   }
 
   checkForMatches(): boolean {
@@ -54,11 +64,11 @@ export class MaskDirective implements OnInit {
       }
 
       replacement = this.groups[rex];
-      oldValue = this.elementRef.nativeElement.value;
-      this.elementRef.nativeElement.value = this.elementRef.nativeElement.value.replace(
+      oldValue = this.elementRef.value;
+      this.elementRef.value = this.elementRef.value.replace(
         new RegExp(rex), replacement);
 
-        if (oldValue != this.elementRef.nativeElement.value) {
+        if (oldValue != this.elementRef.value) {
         this.matches.push(rex);
         hasMatch = true;
       }
