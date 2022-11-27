@@ -22,14 +22,14 @@ export class MaskDirective implements OnInit {
     this.regexBuilder = null;
   }
 
+  get maxInputSize(): number {
+    return this.maskPattern.length;
+  }
+
   ngOnInit() {
     this.elementRef.maxLength = this.maskPattern.length;
     this.regexBuilder = new RegexBuilder(this.maskPattern);
     this.groups = this.regexBuilder.build();
-  }
-
-  get maxInputSize(): int {
-    return this.maskPattern.length;
   }
 
   @HostListener('paste', ['$event'])
@@ -47,13 +47,13 @@ export class MaskDirective implements OnInit {
 
   @HostListener('keyup.Backspace', ['$event'])
   onDelete() {
+    this.matches = [];
     let regexps = Object.keys(this.groups);
     let inputValue = this.elementRef.value;
-    let match: RegExpMatchArray | null = null;
-    this.matches = inputValue ? [regexps[0]] : [];
+    let match: RegExpMatchArray | null;
     for(let rex of regexps) {
       match = inputValue.match(new RegExp(rex));
-      if (match?.index && inputValue[match.index] == this.groups[rex]) {
+      if (typeof(match?.index) == 'number' && inputValue[match.index] == this.groups[rex]) {
         this.matches.push(rex);
       }
     }
