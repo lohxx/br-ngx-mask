@@ -28,6 +28,10 @@ export class MaskDirective implements OnInit {
     this.groups = this.regexBuilder.build();
   }
 
+  get maxInputSize(): int {
+    return this.maskPattern.length;
+  }
+
   @HostListener('paste', ['$event'])
   onPaste() {
     this.matches = [];
@@ -45,9 +49,10 @@ export class MaskDirective implements OnInit {
   onDelete() {
     let regexps = Object.keys(this.groups);
     let inputValue = this.elementRef.value;
+    let match: RegExpMatchArray | null = null;
     this.matches = inputValue ? [regexps[0]] : [];
     for(let rex of regexps) {
-      let match: RegExpMatchArray | null = inputValue.match(new RegExp(rex));
+      match = inputValue.match(new RegExp(rex));
       if (match?.index && inputValue[match.index] == this.groups[rex]) {
         this.matches.push(rex);
       }
@@ -66,7 +71,7 @@ export class MaskDirective implements OnInit {
       replacement = this.groups[rex];
       oldValue = this.elementRef.value;
       this.elementRef.value = this.elementRef.value.replace(
-        new RegExp(rex), replacement);
+        new RegExp(rex), replacement).slice(0, this.maxInputSize);
 
         if (oldValue != this.elementRef.value) {
         this.matches.push(rex);
