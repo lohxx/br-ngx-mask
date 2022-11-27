@@ -8,19 +8,15 @@ const IGNORE_EVENTS = ['deleteContentBackward'];
   selector: '[mask]'
 })
 export class MaskDirective implements OnInit {
-  matchStart = false;
-  start: RegexMap = {};
   groups: RegexMap = {};
   matches: string[] = [];
-  regexBuilder: RegexBuilder | null;
+  regexBuilder: RegexBuilder | null = null;
 
   @Input() maskPattern: string = '';
 
   constructor(
     private elementRef: ElementRef<HTMLInputElement>,
-  ) { 
-    this.regexBuilder = null;
-  }
+  ) { }
 
   ngOnInit() {
     this.elementRef.nativeElement.maxLength = this.maskPattern.length;
