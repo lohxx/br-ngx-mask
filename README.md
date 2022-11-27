@@ -1,24 +1,48 @@
 # BrNgxMask
+Input mask library with zero dependency!
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.1.0.
 
-## Code scaffolding
+## How to use
 
-Run `ng generate component component-name --project br-ngx-mask` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project br-ngx-mask`.
-> Note: Don't forget to add `--project br-ngx-mask` or else it will be added to the default project in your `angular.json` file. 
+Import and provide the library module on your application
 
-## Build
+```javascript
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 
-Run `ng build br-ngx-mask` to build the project. The build artifacts will be stored in the `dist/` directory.
+import { AppComponent } from './app.component';
+import { BrNgxMaskModule } from 'br-ngx-mask';
 
-## Publishing
 
-After building your library with `ng build br-ngx-mask`, go to the dist folder `cd dist/br-ngx-mask` and run `npm publish`.
+@NgModule({
+  declarations: [
+    AppComponent,
+  ],
+  imports: [
+    BrowserModule,
+    BrNgxMaskModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
 
-## Running unit tests
+Add the directive on your input element. For now, the directive only works on numeric patterns.
 
-Run `ng test br-ngx-mask` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```html
+<div>
+    <label for="cpf">CPF</label><br>
+    <input type="text" id="cpf" mask [maskPattern]="'000.000.000-00'">
+</div>
+<div>
+    <label for="cnpj">CNPJ</label><br>
+    <input type="text"  id="cnpj" mask [maskPattern]="'00.000.000/0000-00'">
+</div>
 
-## Further help
+<div>
+    <label for="pis">PIS</label><br>
+    <input type="text"  id="pis" mask [maskPattern]="'000.00000.00-0'">
+</div>
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.

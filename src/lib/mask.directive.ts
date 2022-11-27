@@ -59,9 +59,8 @@ export class MaskDirective implements OnInit {
     }
   }
 
-  checkForMatches(): boolean {
+  checkForMatches(): void {
     let oldValue = '';
-    let hasMatch = false;
     let replacement = '';
     for(let rex of Object.keys(this.groups)) {
       if (this.matches.indexOf(rex) != -1) {
@@ -74,10 +73,8 @@ export class MaskDirective implements OnInit {
         new RegExp(rex), replacement).slice(0, this.maxInputSize);
 
         if (oldValue != this.elementRef.value) {
-        this.matches.push(rex);
-        hasMatch = true;
-      }
+          this.matches.push(rex);
+        }
     }
-    return hasMatch;
   }
 }
