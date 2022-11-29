@@ -1,6 +1,10 @@
 # BrNgxMask
 Input mask library with zero dependency!
 
+## How to install
+
+Clone this repository and run npm install with the clone path as argument
+
 
 ## How to use
 
