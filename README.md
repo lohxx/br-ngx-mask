@@ -32,7 +32,7 @@ import { BrNgxMaskModule } from 'br-ngx-mask';
 export class AppModule { }
 ```
 
-Add the directive on your input element. For now, the directive only works on numeric patterns.
+Add the directive on your input element. For now, the directive only works on numeric patterns and does yet not work well for patterns that need extra validation, like currency formats.
 
 ```html
 <div>
